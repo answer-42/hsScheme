@@ -4,7 +4,7 @@ module Parser where
 
 import Control.Applicative ((<$>), (*>), (<*), (<*>))
 import Data.Maybe (fromJust)
-import Text.ParserCombinators.Parsec hiding (char)
+import Text.ParserCombinators.Parsec hiding (char, string)
 import qualified Text.ParserCombinators.Parsec as P
 
 import Ast
@@ -30,6 +30,27 @@ number = Number . read <$> many1 digit
 float :: Parser LispVal
 float = Float
     <$> ((+) <$> (read <$> many digit)
-             <*  P.char '.'
-              *> (read . ("0." ++) <$> many1 digit))
-                  
+             <*> (read . ("0." ++) <$> (P.char '.' *> many1 digit)))
+
+expression :: Parser LispVal
+expression = char
+         <|> try string
+         <|> try symbol
+         <|> try float
+         <|> number
+         
+parseExpr :: String -> String
+parseExpr s = case parse expression "scheme" s of
+  Left e -> "error: " ++ show e
+  Right a -> case a of
+    Char c -> "char: " ++ [c]
+    String s -> "string: " ++ s
+    Symbol s -> "symbol: " ++ s
+    Number n -> "number: " ++ show n
+    Float r -> "float: " ++ show r
+  
+-- tests
+
+test = mapM_ (putStrLn . parseExpr) tests
+  where tests = ["#\\a", "\"hello \\\"scheme\\\"\"",
+                 "123", "1.42", "symbol42"]
