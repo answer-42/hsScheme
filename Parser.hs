@@ -30,10 +30,10 @@ number = Number . read <$> many1 digit
 float :: Parser LispVal
 float = Float
     <$> ((read .) . (++) <$> many digit
-                     <*> (P.char '.' *> many1 digit))
+                         <*> (P.char '.' *> many1 digit))
 
 expression :: Parser LispVal
-expression = char
+expression = try char
          <|> try string
          <|> try symbol
          <|> try float
