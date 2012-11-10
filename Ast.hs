@@ -7,8 +7,8 @@ import Data.List (intercalate)
 
 data LispVal =
   Symbol String
-  | List [ LispVal ]
-  | DottedList [ LispVal ] LispVal
+  | List [LispVal]
+  | DottedList [LispVal] LispVal
 --  | Vector
   | Number Integer
   | Float Double

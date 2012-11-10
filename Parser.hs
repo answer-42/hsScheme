@@ -3,6 +3,7 @@
 module Parser where
 
 import Control.Applicative ((<$>), (*>), (<*), (<*>))
+import Control.Monad (liftM)
 import Data.Maybe (fromJust)
 import Text.ParserCombinators.Parsec hiding (char)
 import qualified Text.ParserCombinators.Parsec as P
@@ -10,10 +11,16 @@ import qualified Text.ParserCombinators.Parsec as P
 import Ast
 
 digits = many1 digit
+lparen = P.char '('
+rparen = P.char ')'
 
 char :: Parser LispVal
 char = Char <$> (P.string "#\\" *> letter)
 
+
+-- TODO String and Symbol should be more abstract.
+--      Furthermore, we I think we should put bool/char into symbol.
+--      Because those three types are in Scheme almost the same.
 string :: Parser LispVal
 string = String <$> between doubleQuote doubleQuote (many (escaped <|> noneOf "\"\\"))
   where doubleQuote = P.char '"'
@@ -22,6 +29,9 @@ string = String <$> between doubleQuote doubleQuote (many (escaped <|> noneOf "\
                             <$> oneOf "\\\"nrt")
         specialChars = [('\\', '\\'), ('"', '"'), ('n', '\n'),
                         ('r', '\r'), ('t', '\t')]
+
+symbol :: Parser LispVal
+symbol = Symbol <$> ((:) <$> letter <*> many (letter <|> digit))
 
 integer :: Parser LispVal
 integer = (Number . read) <$> digits
@@ -33,16 +43,29 @@ float = do
   afterPoint <- digits
   return $ Float $ read (beforePoint ++ "." ++ afterPoint)
 
-symbol :: Parser LispVal
-symbol = Symbol <$> ((:) <$> letter <*> many (letter <|> digit))
+dottedList :: Parser LispVal
+dottedList = do
+  lparen
+  firstPart <- endBy1 parseExpr spaces
+  secondPart <- P.char '.' >> spaces >> parseExpr
+  rparen
+  return $ DottedList firstPart secondPart
 
-number :: Parser LispVal
-number = Number . read <$> many1 digit
- 
+list :: Parser LispVal
+list = do 
+  lparen
+  elem <- sepBy parseExpr spaces 
+  rparen
+  return $ List elem
+
 parseExpr :: Parser LispVal
-parseExpr = Parser.string
+parseExpr =  Parser.string
+        <|> symbol
+        <|> char
         <|> float
         <|> integer
+        <|> try list
+        <|> dottedList
 
 readExpr :: String -> Either ParseError LispVal
 readExpr input = parse parseExpr "test" input
