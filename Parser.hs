@@ -5,7 +5,7 @@ module Parser where
 import Control.Applicative ((<$>), (*>), (<*), (<*>))
 import Control.Monad (liftM)
 import Data.Maybe (fromJust)
-import Text.ParserCombinators.Parsec hiding (char)
+import Text.ParserCombinators.Parsec hiding (char, string)
 import qualified Text.ParserCombinators.Parsec as P
 
 import Ast
@@ -69,5 +69,23 @@ parseExpr =  Parser.string
 
 readExpr :: String -> Either ParseError LispVal
 readExpr input = parse parseExpr "test" input
+
+{-        
+parseExpr :: String -> String
+parseExpr s = case parse expression "scheme" s of
+  Left e -> "error: " ++ show e
+  Right a -> case a of
+    Char c -> "char: " ++ [c]
+    String s -> "string: " ++ s
+    Symbol s -> "symbol: " ++ s
+    Number n -> "number: " ++ show n
+    Float r -> "float: " ++ show r
+  
+-- tests
+
+test = mapM_ (putStrLn . parseExpr) tests
+  where tests = ["#\\a", "\"hello \\\"scheme\\\"\"",
+                 "123", "1.42", "symbol42"]
+-}
 
                 
