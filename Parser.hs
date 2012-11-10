@@ -4,10 +4,12 @@ module Parser where
 
 import Control.Applicative ((<$>), (*>), (<*), (<*>))
 import Data.Maybe (fromJust)
-import Text.ParserCombinators.Parsec hiding (char, string)
+import Text.ParserCombinators.Parsec hiding (char)
 import qualified Text.ParserCombinators.Parsec as P
 
 import Ast
+
+digits = many1 digit
 
 char :: Parser LispVal
 char = Char <$> (P.string "#\\" *> letter)
@@ -21,36 +23,28 @@ string = String <$> between doubleQuote doubleQuote (many (escaped <|> noneOf "\
         specialChars = [('\\', '\\'), ('"', '"'), ('n', '\n'),
                         ('r', '\r'), ('t', '\t')]
 
+integer :: Parser LispVal
+integer = (Number . read) <$> digits
+
+float :: Parser LispVal
+float = do
+  beforePoint <- digits
+  P.char '.'
+  afterPoint <- digits
+  return $ Float $ read (beforePoint ++ "." ++ afterPoint)
+
 symbol :: Parser LispVal
 symbol = Symbol <$> ((:) <$> letter <*> many (letter <|> digit))
 
 number :: Parser LispVal
 number = Number . read <$> many1 digit
+ 
+parseExpr :: Parser LispVal
+parseExpr = Parser.string
+        <|> float
+        <|> integer
 
-float :: Parser LispVal
-float = Float
-    <$> ((+) <$> (read <$> many digit)
-             <*> (read . ("0." ++) <$> (P.char '.' *> many1 digit)))
+readExpr :: String -> Either ParseError LispVal
+readExpr input = parse parseExpr "test" input
 
-expression :: Parser LispVal
-expression = char
-         <|> try string
-         <|> try symbol
-         <|> try float
-         <|> number
-         
-parseExpr :: String -> String
-parseExpr s = case parse expression "scheme" s of
-  Left e -> "error: " ++ show e
-  Right a -> case a of
-    Char c -> "char: " ++ [c]
-    String s -> "string: " ++ s
-    Symbol s -> "symbol: " ++ s
-    Number n -> "number: " ++ show n
-    Float r -> "float: " ++ show r
-  
--- tests
-
-test = mapM_ (putStrLn . parseExpr) tests
-  where tests = ["#\\a", "\"hello \\\"scheme\\\"\"",
-                 "123", "1.42", "symbol42"]
+                
