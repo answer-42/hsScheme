@@ -14,6 +14,12 @@ digits = many1 digit
 lparen = P.char '('
 rparen = P.char ')'
 
+getSign :: (Num a) => Parser (a -> a)
+getSign = option id (do s <- oneOf "+-"
+                        return $ case s of 
+                                 '-' -> negate 
+                                 '+' -> id)
+
 char :: Parser LispVal
 char = Char <$> (P.string "#\\" *> letter)
 
@@ -34,14 +40,18 @@ symbol :: Parser LispVal
 symbol = Symbol <$> ((:) <$> letter <*> many (letter <|> digit))
 
 integer :: Parser LispVal
-integer = (Number . read) <$> digits
+integer = do
+  s <- getSign
+  x <- digits
+  return $ Number $ s (read x)
 
 float :: Parser LispVal
 float = do
+  s <- getSign
   beforePoint <- digits
   P.char '.'
   afterPoint <- digits
-  return $ Float $ read (beforePoint ++ "." ++ afterPoint)
+  return $ Float $ s (read (beforePoint ++ "." ++ afterPoint))
 
 dottedList :: Parser LispVal
 dottedList = do
@@ -59,11 +69,11 @@ list = do
   return $ List elem
 
 parseExpr :: Parser LispVal
-parseExpr =  Parser.string
-        <|> symbol
-        <|> char
-        <|> float
-        <|> integer
+parseExpr =  try Parser.string
+        <|> try symbol
+        <|> try char
+        <|> try float
+        <|> try integer
         <|> try list
         <|> dottedList
 
