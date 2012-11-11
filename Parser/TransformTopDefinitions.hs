@@ -22,3 +22,4 @@ transformTopDef = map transform
             Symbol "define":List y:ys -> transDefLam y ys 
             Symbol "define":DottedList yi ye:ys -> transDotDefLam yi ye ys
             _ -> l
+        transform r = r

@@ -8,5 +8,8 @@ import Parser.AST
  -}
 
 removeIntDef exprs = map transIntDef exprs
-  where transIntDef x = id x 
+  where removeDef x = List x 
+        transIntDef l@(List x) 
+            | (Symbol "define") `elem` x = removeDef x
+            | otherwise                  = l
 
