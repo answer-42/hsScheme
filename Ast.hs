@@ -27,9 +27,12 @@ instance Show LispVal where
   show (Bool p) = if p then "#t" else "#f"
   show (Char c) = [c]
 
-lambda :: [String] -> [LispVal] -> LispVal
-lambda args body = List ([Symbol "lambda", List (Symbol <$> args)] ++ body)
+createLambda :: [String] -> [LispVal] -> LispVal
+createLambda args body = List ([Symbol "lambda", List (Symbol <$> args)] ++ body)
+
+createQuote :: LispVal -> LispVal
+createQuote v = List [Symbol "quote", v]
 
 -- tests
 carLambda :: LispVal
-carLambda = lambda ["a", "b"] [List [Symbol "car", Symbol "a"], Symbol "a"]
+carLambda = createLambda ["a", "b"] [List [Symbol "car", Symbol "a"], Symbol "a"]

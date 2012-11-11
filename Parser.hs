@@ -81,9 +81,7 @@ list :: Parser LispVal
 list = List <$> between lparen rparen (expr `sepBy` spaces)
 
 quote :: Parser LispVal
-quote = do
-  e <- P.char '\'' *> expr
-  return (List [Symbol "quote", e])         
+quote = createQuote <$> (P.char '\'' *> expr)
 
 expr :: Parser LispVal
 expr = try string
@@ -114,12 +112,13 @@ testReadExpr s = case parse expr "scheme" s of
     a@(DottedList _ _) -> "dottedlist: " ++ show a
 
 test = mapM_ (putStrLn . testReadExpr) tests
-  where tests = ["#\\a", "\"hello \\\"scheme\\\"\"",
+  where tests = ["#\\a", "\"hello \n\\\"scheme\\\"\"",
                  "123", "1.42", "symbol42", "(a b c)",
                  "(h (54 2) . e)", "(a b.c)", "'('u 3)",
                  setLambda, show carLambda, "#t", "#f"]
-        setLambda = show (lambda ["a", "b", "c"]
-                                 [List [Symbol "set!", Symbol "a", Number 1], 
-                                  Symbol "a"])
+        setLambda =
+          show (createLambda ["a", "b", "c"]
+                             [List [Symbol "set!", Symbol "a", Number 1], 
+                              Symbol "a"])
 
                 
