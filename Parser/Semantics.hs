@@ -16,5 +16,6 @@ checkDefines = go check True
               all isSymbol xs && checkDefines body
             List (Symbol "define":DottedList xs x:body) ->
               length xs <= 1 && all isSymbol xs && isSymbol x && checkDefines body
-            _ -> False
+            List (Symbol "define":[Symbol _, List l]) -> checkDefines l
+            _ -> True
         
