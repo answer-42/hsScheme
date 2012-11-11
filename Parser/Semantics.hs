@@ -1,8 +1,8 @@
 -- file: Semantics.hs
 
-module Semantics where
+module Parser.Semantics where
 
-import Structure.AST
+import Parser.AST
 
 -- data LispVal =
 --   Symbol String
