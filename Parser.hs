@@ -14,11 +14,11 @@ digits = many1 digit
 lparen = P.char '('
 rparen = P.char ')'
 
-getSign :: (Num a) => Parser (a -> a)
-getSign = option id (do s <- oneOf "+-"
-                        return $ case s of 
-                                 '-' -> negate 
-                                 '+' -> id)
+sign :: (Num a) => Parser (a -> a)
+sign = option id (do s <- oneOf "+-"
+                     return $ case s of 
+                       '-' -> negate 
+                       '+' -> id)
 
 char :: Parser LispVal
 char = Char <$> (P.string "#\\" *> letter)
@@ -31,23 +31,25 @@ string :: Parser LispVal
 string = String <$> between doubleQuote doubleQuote (many (escaped <|> noneOf "\"\\"))
   where doubleQuote = P.char '"'
         escaped = P.char '\\'
-               *> (fromJust <$> flip lookup specialChars
+               *> (fromJust <$> flip lookup escapedChars
                             <$> oneOf "\\\"nrt")
-        specialChars = [('\\', '\\'), ('"', '"'), ('n', '\n'),
+        escapedChars = [('\\', '\\'), ('"', '"'), ('n', '\n'),
                         ('r', '\r'), ('t', '\t')]
 
 symbol :: Parser LispVal
-symbol = Symbol <$> ((:) <$> letter <*> many (letter <|> digit))
-
+symbol = Symbol <$> ((:) <$> letter
+                         <*> many (letter <|> specialChar <|> digit))
+  where specialChar = oneOf "!$%&*+-./:<=>?@^_~"
+        
 integer :: Parser LispVal
 integer = do
-  s <- getSign
+  s <- sign
   x <- digits
   return $ Number $ s (read x)
 
 float :: Parser LispVal
 float = do
-  s <- getSign
+  s <- sign
   beforePoint <- digits
   P.char '.'
   afterPoint <- digits
@@ -56,33 +58,39 @@ float = do
 dottedList :: Parser LispVal
 dottedList = do
   lparen
-  firstPart <- endBy1 parseExpr spaces
-  secondPart <- P.char '.' >> spaces >> parseExpr
+  firstPart <- endBy1 expr spaces
+  secondPart <- P.char '.' >> spaces >> expr
   rparen
   return $ DottedList firstPart secondPart
 
 list :: Parser LispVal
 list = do 
   lparen
-  elem <- sepBy parseExpr spaces 
+  elem <- sepBy expr spaces 
   rparen
   return $ List elem
 
-parseExpr :: Parser LispVal
-parseExpr =  try Parser.string
-        <|> try symbol
-        <|> try char
-        <|> try float
-        <|> try integer
-        <|> try list
-        <|> dottedList
+quote :: Parser LispVal
+quote = do
+  e <- P.char '\'' *> expr
+  return (List [Symbol "quote", e])         
+
+expr :: Parser LispVal
+expr = try string
+   <|> try symbol
+   <|> try char
+   <|> try float
+   <|> try integer
+   <|> try list
+   <|> try quote
+   <|> dottedList
 
 readExpr :: String -> Either ParseError LispVal
-readExpr input = parse parseExpr "test" input
+readExpr input = parse expr "scheme" input
 
-{-        
-parseExpr :: String -> String
-parseExpr s = case parse expression "scheme" s of
+-- tests
+testReadExpr :: String -> String
+testReadExpr s = case parse expr "scheme" s of
   Left e -> "error: " ++ show e
   Right a -> case a of
     Char c -> "char: " ++ [c]
@@ -90,12 +98,16 @@ parseExpr s = case parse expression "scheme" s of
     Symbol s -> "symbol: " ++ s
     Number n -> "number: " ++ show n
     Float r -> "float: " ++ show r
-  
--- tests
+    a@(List _) -> "list: " ++ show a
+    a@(DottedList _ _) -> "dottedlist: " ++ show a
 
-test = mapM_ (putStrLn . parseExpr) tests
+test = mapM_ (putStrLn . testReadExpr) tests
   where tests = ["#\\a", "\"hello \\\"scheme\\\"\"",
-                 "123", "1.42", "symbol42"]
--}
+                 "123", "1.42", "symbol42", "(a b c)",
+                 "(h (54 2) . e)", "(a b.c)", "'('u 3)",
+                 setLambda, show carLambda]
+        setLambda = show (lambda ["a", "b", "c"]
+                                 [List [Symbol "set!", Symbol "a", Number 1], 
+                                  Symbol "a"])
 
                 
