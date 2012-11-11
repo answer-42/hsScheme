@@ -94,12 +94,12 @@ expr = try string
    <|> try float
    <|> try integer
    <|> try quote
-   <|> between lparen rparen ((try dottedList) <|> list)
+   <|> between lparen rparen (try dottedList <|> list)
    -- <|> try list
    -- <|> dottedList
    --
 multiExpr :: Parser [LispVal]
-multiExpr = expr `endBy1` spaces 
+multiExpr = expr `endBy1` many1 space 
 
 readExpr :: String -> Either ParseError [LispVal]
 readExpr input = parse multiExpr "scheme" input
@@ -108,7 +108,7 @@ file :: Parser [LispVal]
 file = expr `endBy1` spaces
 
 -- tests
-{-
+
 testReadExpr :: String -> [String]
 testReadExpr s = case parse file "scheme" s of
   Left e -> ["error: " ++ show e]
@@ -132,5 +132,3 @@ test = mapM_ (print . testReadExpr) tests
           show (createLambda ["a", "b", "c"]
                              [List [Symbol "set!", Symbol "a", Number 1], 
                               Symbol "a"])
-
-  -}              
