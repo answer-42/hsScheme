@@ -8,5 +8,5 @@ import AST
  -}
 
 removeIntDef exprs = map transIntDef exprs
-  where transIntDef = 
+  where transIntDef = id 
 
