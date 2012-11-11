@@ -1,0 +1,8 @@
+The steps we take for our incremental compiler approach.
+
+* Parsing
+* semantic checks
+* transform toplevel defines <TransformTopDefinitions.hs>
+* apply macros <ApplyMacros.hs>
+* remove internal defines <InternalDefinitions.hs>
+* declaration table
