@@ -19,13 +19,16 @@ data LispVal =
 
 instance Show LispVal where
   show (Symbol s) = s
-  show (List l) = "(" ++ intercalate " " (show <$> l) ++ ")"
-  show (DottedList l v) = "(" ++ intercalate " " (show <$> l) ++ " . " ++ show v ++ ")"
+  show (List l) = "(" ++ sepBySpaces l ++ ")"
+  show (DottedList l v) = "(" ++ sepBySpaces l ++ " . " ++ show v ++ ")"
   show (Number n) = show n
   show (Float r) = show r
-  show (String s) = s
+  show (String s) = "\"" ++ s ++ "\""
   show (Bool p) = if p then "#t" else "#f"
-  show (Char c) = [c]
+  show (Char c) = "#\\" ++ [c]
+
+sepBySpaces :: [LispVal] -> String
+sepBySpaces = intercalate " " . (show <$>)
 
 createLambda :: [String] -> [LispVal] -> LispVal
 createLambda args body = List ([Symbol "lambda", List (Symbol <$> args)] ++ body)
