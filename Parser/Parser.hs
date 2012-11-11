@@ -103,11 +103,21 @@ testReadExpr s = case readExpr s of
     -- a@(List _) -> "list: " ++ show a
     -- a@(DottedList _ _) -> "dottedlist: " ++ show a
 
-test = mapM_ (print . testReadExpr) tests
-  where tests = ["#\\a", "\"hello \n\\\"scheme\\\"\"",
-                 "123", "1.42", "symbol42", "(a b c)",
-                 "(h (54 2) . e)", "(a b.c)", "'('u 3)",
-                 setLambda, show carLambda, "#t", "#f"]
+test = mapM_ (mapM_ putStrLn . testReadExpr) tests
+  where tests = ["#\\a",
+                 "\"hello \n\\\"scheme\\\"\"",
+                 "123",
+                 "1.42",
+                 "symbol42",
+                 "(a b c)",
+                 "(h (54 2) . e)",
+                 "(a b.c)",
+                 "'('u 3)",
+                 setLambda,
+                 show carLambda,
+                 "#t",
+                 "#f",
+                 "(define a (lambda (b c) \"hello\"))\n(1 a 5)"]
         setLambda =
           show (createLambda ["a", "b", "c"]
                              [List [Symbol "set!", Symbol "a", Number 1], 
