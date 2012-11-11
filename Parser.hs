@@ -40,7 +40,14 @@ symbol :: Parser LispVal
 symbol = Symbol <$> ((:) <$> letter
                          <*> many (letter <|> specialChar <|> digit))
   where specialChar = oneOf "!$%&*+-./:<=>?@^_~"
-        
+
+bool :: Parser LispVal
+bool = do
+  p <- P.char '#' *> oneOf "tf"
+  return (Bool (case p of
+                   't' -> True
+                   'f' -> False))
+
 integer :: Parser LispVal
 integer = do
   s <- sign
@@ -63,12 +70,15 @@ dottedList = do
   rparen
   return $ DottedList firstPart secondPart
 
+-- list :: Parser LispVal
+-- list = do 
+--   lparen
+--   elem <- sepBy expr spaces 
+--   rparen
+--   return $ List elem
+  
 list :: Parser LispVal
-list = do 
-  lparen
-  elem <- sepBy expr spaces 
-  rparen
-  return $ List elem
+list = List <$> between lparen rparen (expr `sepBy` spaces)
 
 quote :: Parser LispVal
 quote = do
@@ -78,11 +88,12 @@ quote = do
 expr :: Parser LispVal
 expr = try string
    <|> try symbol
+   <|> try bool
    <|> try char
    <|> try float
    <|> try integer
-   <|> try list
    <|> try quote
+   <|> try list
    <|> dottedList
 
 readExpr :: String -> Either ParseError LispVal
@@ -96,6 +107,7 @@ testReadExpr s = case parse expr "scheme" s of
     Char c -> "char: " ++ [c]
     String s -> "string: " ++ s
     Symbol s -> "symbol: " ++ s
+    a@(Bool _) -> "boolean: " ++ show a
     Number n -> "number: " ++ show n
     Float r -> "float: " ++ show r
     a@(List _) -> "list: " ++ show a
@@ -105,7 +117,7 @@ test = mapM_ (putStrLn . testReadExpr) tests
   where tests = ["#\\a", "\"hello \\\"scheme\\\"\"",
                  "123", "1.42", "symbol42", "(a b c)",
                  "(h (54 2) . e)", "(a b.c)", "'('u 3)",
-                 setLambda, show carLambda]
+                 setLambda, show carLambda, "#t", "#f"]
         setLambda = show (lambda ["a", "b", "c"]
                                  [List [Symbol "set!", Symbol "a", Number 1], 
                                   Symbol "a"])
