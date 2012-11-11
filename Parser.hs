@@ -103,7 +103,7 @@ readExpr input = parse expr "scheme" input
 
 -- tests
 testReadExpr :: String -> [String]
-testReadExpr s = case parse (many1 (expr `sepBy1` spaces)) "scheme" s of
+testReadExpr s = case parse (expr `endBy1` spaces) "scheme" s of
   Left e -> ["error: " ++ show e]
   Right a -> map show a
     -- case a of
