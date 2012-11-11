@@ -23,10 +23,6 @@ sign = option id (do s <- oneOf "+-"
 char :: Parser LispVal
 char = Char <$> (P.string "#\\" *> letter)
 
-
--- TODO String and Symbol should be more abstract.
---      Furthermore, we I think we should put bool/char into symbol.
---      Because those three types are in Scheme almost the same.
 string :: Parser LispVal
 string = String <$> between doubleQuote doubleQuote (many (escaped <|> noneOf "\"\\"))
   where doubleQuote = P.char '"'
@@ -69,17 +65,7 @@ dottedList = do
   secondPart <- P.char '.' >> between spaces spaces expr
   --rparen
   return $ DottedList firstPart secondPart
-
--- list :: Parser LispVal
--- list = do 
---   lparen
---   elem <- sepBy expr spaces 
---   rparen
---   return $ List elem
-  
--- list :: Parser LispVal
--- list = List <$> between lparen rparen (expr `sepBy` spaces)
-  
+ 
 list :: Parser LispVal
 list = List <$> (spaces *> expr `endBy` spaces)
 
@@ -95,22 +81,17 @@ expr = try string
    <|> try integer
    <|> try quote
    <|> between lparen rparen (try dottedList <|> list)
-   -- <|> try list
-   -- <|> dottedList
-   --
+
 multiExpr :: Parser [LispVal]
-multiExpr = expr `endBy1` many1 space 
+multiExpr = (expr `endBy1` spaces) <* eof
 
 readExpr :: String -> Either ParseError [LispVal]
 readExpr input = parse multiExpr "scheme" input
 
-file :: Parser [LispVal]
-file = expr `endBy1` spaces
-
 -- tests
 
 testReadExpr :: String -> [String]
-testReadExpr s = case parse file "scheme" s of
+testReadExpr s = case readExpr s of
   Left e -> ["error: " ++ show e]
   Right a -> map show a
     -- case a of
