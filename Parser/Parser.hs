@@ -61,7 +61,7 @@ float = do
 
 dottedList :: Parser LispVal
 dottedList = do
-  firstPart <- spaces >> endBy1 expr spaces
+  firstPart <- spaces >> endBy expr spaces
   secondPart <- P.char '.' >> between spaces spaces expr
   return $ DottedList firstPart secondPart
  
