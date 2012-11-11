@@ -1,6 +1,6 @@
 -- file: parser.hs
 
-module Parser where
+module Parser.Parser where
 
 import Control.Applicative ((<$>), (*>), (<*), (<*>))
 import Control.Monad (join)

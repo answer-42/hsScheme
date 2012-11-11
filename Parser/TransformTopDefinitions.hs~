@@ -1,4 +1,4 @@
-module TransformTopDefinitions where
+module Parser.TransformTopDefinitions where
 
 import AST
 

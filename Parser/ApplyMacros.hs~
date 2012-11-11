@@ -1,4 +1,4 @@
-module ApplyMacros where
+module Parser.ApplyMacros where
 
 import AST
 

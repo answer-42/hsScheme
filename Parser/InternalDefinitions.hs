@@ -1,6 +1,6 @@
-module InternalDefinitions where
+module Parser.InternalDefinitions where
 
-import AST
+import Parser.AST
 
 {- TODO
  - Transform internal definitions to letrec definitions.

@@ -1,10 +1,10 @@
 module Main where
 
-import AST
-import Parser
-import InternalDefinitions
-import TransformTopDefinitions
-import ApplyMacros
+import Parser.AST
+import Parser.Parser
+import Parser.InternalDefinitions
+import Parser.TransformTopDefinitions
+import Parser.ApplyMacros
 
 mainTest input = case readExpr input of
                   Right ast -> show $ (removeIntDef . applyMacros . transformTopDef) ast
