@@ -86,39 +86,3 @@ multiExpr = expr `endBy1` spaces <* eof
 
 readExpr :: String -> Either ParseError [LispVal]
 readExpr input = parse multiExpr "scheme" input
-
--- tests
-
-testReadExpr :: String -> [String]
-testReadExpr s = case readExpr s of
-  Left e -> ["error: " ++ show e]
-  Right a -> map show a
-    -- case a of
-    -- Char c -> "char: " ++ [c]
-    -- String s -> "string: " ++ s
-    -- Symbol s -> "symbol: " ++ s
-    -- a@(Bool _) -> "boolean: " ++ show a
-    -- Number n -> "number: " ++ show n
-    -- Float r -> "float: " ++ show r
-    -- a@(List _) -> "list: " ++ show a
-    -- a@(DottedList _ _) -> "dottedlist: " ++ show a
-
-test = mapM_ (mapM_ putStrLn . testReadExpr) tests
-  where tests = ["#\\a",
-                 "\"hello \n\\\"scheme\\\"\"",
-                 "123",
-                 "1.42",
-                 "symbol42",
-                 "(a b c)",
-                 "(h (54 2) . e)",
-                 "(a b.c)",
-                 "'('u 3)",
-                 setLambda,
-                 show carLambda,
-                 "#t",
-                 "#f",
-                 "(define a (lambda (b c) \"hello\"))\n(1 a 5)"]
-        setLambda =
-          show (createLambda ["a", "b", "c"]
-                             [List [Symbol "set!", Symbol "a", Number 1], 
-                              Symbol "a"])

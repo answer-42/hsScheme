@@ -40,7 +40,3 @@ createQuote v = List [Symbol "quote", v]
 isSymbol :: LispVal -> Bool
 isSymbol (Symbol _) = True
 isSymbol _ = False
-
--- tests
-carLambda :: LispVal
-carLambda = createLambda ["a", "b"] [List [Symbol "car", Symbol "a"], Symbol "a"]
