@@ -35,6 +35,7 @@ data ArithExpr
 data Function
    = Function {
      name :: String,
+     returnType :: Type,
      arguments :: [(Name, Type)],
      body :: [Statement]
      }
