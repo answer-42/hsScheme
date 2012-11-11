@@ -33,6 +33,11 @@ createLambda args body = List ([Symbol "lambda", List (Symbol <$> args)] ++ body
 createQuote :: LispVal -> LispVal
 createQuote v = List [Symbol "quote", v]
 
+-- predicates
+isSymbol :: LispVal -> Bool
+isSymbol (Symbol _) = True
+isSymbol _ = False
+
 -- tests
 carLambda :: LispVal
 carLambda = createLambda ["a", "b"] [List [Symbol "car", Symbol "a"], Symbol "a"]
