@@ -8,5 +8,5 @@ import Parser.AST
  -}
 
 removeIntDef exprs = map transIntDef exprs
-  where transIntDef = id 
+  where transIntDef x = id x 
 
