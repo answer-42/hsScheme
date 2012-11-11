@@ -8,7 +8,7 @@ import Data.Maybe (fromJust)
 import Text.ParserCombinators.Parsec hiding (char, string)
 import qualified Text.ParserCombinators.Parsec as P
 
-import Ast
+import AST
 
 digits = many1 digit
 lparen = P.char '('
