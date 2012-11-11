@@ -64,10 +64,10 @@ float = do
 
 dottedList :: Parser LispVal
 dottedList = do
-  lparen
-  firstPart <- endBy1 expr spaces
-  secondPart <- P.char '.' >> spaces >> expr
-  rparen
+  --lparen
+  firstPart <- spaces >> endBy1 expr spaces
+  secondPart <- P.char '.' >> between spaces spaces expr
+  --rparen
   return $ DottedList firstPart secondPart
 
 -- list :: Parser LispVal
@@ -77,8 +77,11 @@ dottedList = do
 --   rparen
 --   return $ List elem
   
+-- list :: Parser LispVal
+-- list = List <$> between lparen rparen (expr `sepBy` spaces)
+  
 list :: Parser LispVal
-list = List <$> between lparen rparen (expr `sepBy` spaces)
+list = List <$> (spaces *> expr `endBy` spaces)
 
 quote :: Parser LispVal
 quote = createQuote <$> (P.char '\'' *> expr)
@@ -91,27 +94,29 @@ expr = try string
    <|> try float
    <|> try integer
    <|> try quote
-   <|> try list
-   <|> dottedList
+   <|> between lparen rparen (try list <|> dottedList)
+   -- <|> try list
+   -- <|> dottedList
 
 readExpr :: String -> Either ParseError LispVal
 readExpr input = parse expr "scheme" input
 
 -- tests
-testReadExpr :: String -> String
-testReadExpr s = case parse expr "scheme" s of
-  Left e -> "error: " ++ show e
-  Right a -> case a of
-    Char c -> "char: " ++ [c]
-    String s -> "string: " ++ s
-    Symbol s -> "symbol: " ++ s
-    a@(Bool _) -> "boolean: " ++ show a
-    Number n -> "number: " ++ show n
-    Float r -> "float: " ++ show r
-    a@(List _) -> "list: " ++ show a
-    a@(DottedList _ _) -> "dottedlist: " ++ show a
+testReadExpr :: String -> [String]
+testReadExpr s = case parse (many1 (expr `sepBy` spaces)) "scheme" s of
+  Left e -> ["error: " ++ show e]
+  Right a -> map show a
+    -- case a of
+    -- Char c -> "char: " ++ [c]
+    -- String s -> "string: " ++ s
+    -- Symbol s -> "symbol: " ++ s
+    -- a@(Bool _) -> "boolean: " ++ show a
+    -- Number n -> "number: " ++ show n
+    -- Float r -> "float: " ++ show r
+    -- a@(List _) -> "list: " ++ show a
+    -- a@(DottedList _ _) -> "dottedlist: " ++ show a
 
-test = mapM_ (putStrLn . testReadExpr) tests
+test = mapM_ (print . testReadExpr) tests
   where tests = ["#\\a", "\"hello \n\\\"scheme\\\"\"",
                  "123", "1.42", "symbol42", "(a b c)",
                  "(h (54 2) . e)", "(a b.c)", "'('u 3)",
