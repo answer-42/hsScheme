@@ -7,4 +7,6 @@ import AST
  - See r5rs 5.2.2
  -}
 
-removeIntDef = id
+removeIntDef exprs = map transIntDef exprs
+  where transIntDef = 
+
