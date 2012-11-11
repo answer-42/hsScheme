@@ -1,6 +1,8 @@
 module ApplyMacros where
 
-import Ast
+import AST
+
+applyMacros = id
 
 {- TODO
  - Apply macros to AST
