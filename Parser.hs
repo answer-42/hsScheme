@@ -101,9 +101,12 @@ expr = try string
 readExpr :: String -> Either ParseError LispVal
 readExpr input = parse expr "scheme" input
 
+file :: Parser [LispVal]
+file = expr `endBy1` spaces
+
 -- tests
 testReadExpr :: String -> [String]
-testReadExpr s = case parse (expr `endBy1` spaces) "scheme" s of
+testReadExpr s = case parse file "scheme" s of
   Left e -> ["error: " ++ show e]
   Right a -> map show a
     -- case a of
