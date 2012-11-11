@@ -3,7 +3,7 @@
 module Parser where
 
 import Control.Applicative ((<$>), (*>), (<*), (<*>))
-import Control.Monad (liftM)
+import Control.Monad (join)
 import Data.Maybe (fromJust)
 import Text.ParserCombinators.Parsec hiding (char, string)
 import qualified Text.ParserCombinators.Parsec as P
@@ -13,6 +13,7 @@ import AST
 digits = many1 digit
 lparen = P.char '('
 rparen = P.char ')'
+between2 = join between
 
 sign :: (Num a) => Parser (a -> a)
 sign = option id (do s <- oneOf "+-"
@@ -24,7 +25,7 @@ char :: Parser LispVal
 char = Char <$> (P.string "#\\" *> letter)
 
 string :: Parser LispVal
-string = String <$> between doubleQuote doubleQuote (many (escaped <|> noneOf "\"\\"))
+string = String <$> between2 doubleQuote (many (escaped <|> noneOf "\"\\"))
   where doubleQuote = P.char '"'
         escaped = P.char '\\'
                *> (fromJust <$> flip lookup escapedChars
@@ -60,10 +61,8 @@ float = do
 
 dottedList :: Parser LispVal
 dottedList = do
-  --lparen
   firstPart <- spaces >> endBy1 expr spaces
   secondPart <- P.char '.' >> between spaces spaces expr
-  --rparen
   return $ DottedList firstPart secondPart
  
 list :: Parser LispVal
@@ -83,7 +82,7 @@ expr = try string
    <|> between lparen rparen (try dottedList <|> list)
 
 multiExpr :: Parser [LispVal]
-multiExpr = (expr `endBy1` spaces) <* eof
+multiExpr = expr `endBy1` spaces <* eof
 
 readExpr :: String -> Either ParseError [LispVal]
 readExpr input = parse multiExpr "scheme" input

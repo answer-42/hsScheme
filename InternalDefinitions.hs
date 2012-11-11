@@ -1,6 +1,6 @@
 module InternalDefinitions where
 
-import Ast
+import AST
 
 {- TODO
  - Transform internal definitions to letrec definitions.
