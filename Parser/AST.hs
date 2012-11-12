@@ -40,3 +40,7 @@ createQuote v = List [Symbol "quote", v]
 isSymbol :: LispVal -> Bool
 isSymbol (Symbol _) = True
 isSymbol _ = False
+
+isDefine :: LispVal -> Bool
+isDefine (List (Symbol "define":xs)) = True
+isDefine _ = False

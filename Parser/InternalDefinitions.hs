@@ -18,10 +18,7 @@ removeIntDef = map transIntDef
         changeDef xs = 
             [List $ [Symbol "letrec", 
                      List $ map (\y -> List [fst y, snd y ]) defines] ++ rest]
-            where isDefine (List (Symbol "define":xs)) = True
-                  isDefine _ = False
-                               
-                  defines = map (\y -> case y of (List (Symbol "define":a:as:[])) -> (a,as)) $
+            where defines = map (\y -> case y of (List (Symbol "define":a:as:[])) -> (a,as)) $
                             filter isDefine xs
                   rest = filter (not . isDefine) xs
 
