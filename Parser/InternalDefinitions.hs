@@ -18,13 +18,14 @@ removeIntDef = map transIntDef
         changeDef xs = 
             [List $ [Symbol "letrec", 
                      List $ map (\y -> List [fst y, snd y]) defines] ++ rest]
-            where defines = map (\y -> case y of
-                                    List (Symbol "define":a:[b]) -> (a,b)) $
+            where defines = map (\y -> case y of 
+                                    List (Symbol "define":a:as:[])) -> (a,as) $
                             filter isDefine xs
                   rest = filter (not . isDefine) xs
 
         transIntDef :: LispVal -> LispVal
-        transIntDef (List (Symbol "define":x:xs:[])) =
-          removeDef (Symbol "define":x:[]) xs
---        transIntDef (List (Symbol "let":x:xs:[])) = removeDef (Symbol "let":x:[]) xs
+        transIntDef (List (Symbol "let":x:xs:[])) =
+                              removeDef [Symbol "let",x] xs
+        transIntDef (List (Symbol "define":x:xs:[])) = 
+                              removeDef [Symbol "define",x] xs
         transIntDef r = r
