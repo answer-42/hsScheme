@@ -2,7 +2,7 @@
 
 module Parser.Parser where
 
-import Control.Applicative ((<$>), (*>), (<*), (<*>))
+import Control.Applicative ((<$>), (*>), (<*), (<*>), pure)
 import Control.Monad (join)
 import Data.Maybe (fromJust)
 import Text.ParserCombinators.Parsec hiding (char, string)
@@ -34,9 +34,11 @@ string = String <$> between2 doubleQuote (many (escaped <|> noneOf "\"\\"))
                         ('r', '\r'), ('t', '\t')]
 
 symbol :: Parser LispVal
-symbol = Symbol <$> ((:) <$> letter
-                         <*> many (letter <|> specialChar <|> digit))
+symbol = Symbol <$> (((:) <$> letter
+                          <*> many (letter <|> specialChar <|> digit)) 
+                     <|> (pure <$> oneOf "+-") <|> P.string "...")
   where specialChar = oneOf "!$%&*+-./:<=>?@^_~"
+--        peculiarIdent = (oneOf "+-") <|> P.string "..."
 
 bool :: Parser LispVal
 bool = do

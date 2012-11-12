@@ -4,8 +4,8 @@ import Parser.AST
 import Parser.Parser
 import Parser.InternalDefinitions
 
-tests = [  ("(define x (lambda (y) (define a b) a))",
-           "[(define x (lambda (y) (letrec ((a b)) a)))]")
+tests = [  ("(define x (lambda (y) (define a b) (+ 11 2) a))",
+           "[(define x (lambda (y) (letrec ((a b)) (+ 11 2) a)))]")
          ,("1", "[1]")
          ,("(let ((x y)) (define a b) a)",
            "[(let ((x y)) (letrec ((a b)) a))]")
