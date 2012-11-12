@@ -27,4 +27,5 @@ removeIntDef = map transIntDef
 
         transIntDef :: LispVal -> LispVal
         transIntDef (List (Symbol "define":x:xs:[])) = removeDef (Symbol "define":x:[]) xs
+--        transIntDef (List (Symbol "let":x:xs:[])) = removeDef (Symbol "let":x:[]) xs
         transIntDef r = r
