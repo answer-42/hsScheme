@@ -21,5 +21,6 @@ transformTopDef = map transform
           case x of
             Symbol "define":List y:ys -> transDefLam y ys 
             Symbol "define":DottedList yi ye:ys -> transDotDefLam yi ye ys
+            Symbol "let":x:xs -> List $ Symbol "let":x:[]++transformTopDef xs
             _ -> l
         transform r = r

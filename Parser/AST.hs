@@ -15,17 +15,17 @@ data LispVal =
   | String String
   | Bool Bool
   | Char Char
-    deriving (Eq)
+    deriving (Eq,Show)
 
-instance Show LispVal where
-  show (Symbol s) = s
-  show (List l) = "(" ++ sepBySpaces l ++ ")"
-  show (DottedList l v) = "(" ++ sepBySpaces l ++ " . " ++ show v ++ ")"
-  show (Number n) = show n
-  show (Float r) = show r
-  show (String s) = "\"" ++ s ++ "\""
-  show (Bool p) = if p then "#t" else "#f"
-  show (Char c) = "#\\" ++ [c]
+-- instance Show LispVal where
+--   show (Symbol s) = s
+--   show (List l) = "(" ++ sepBySpaces l ++ ")"
+--   show (DottedList l v) = "(" ++ sepBySpaces l ++ " . " ++ show v ++ ")"
+--   show (Number n) = show n
+--   show (Float r) = show r
+--   show (String s) = "\"" ++ s ++ "\""
+--   show (Bool p) = if p then "#t" else "#f"
+--   show (Char c) = "#\\" ++ [c]
 
 sepBySpaces :: [LispVal] -> String
 sepBySpaces = intercalate " " . (show <$>)

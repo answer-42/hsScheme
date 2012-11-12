@@ -2,7 +2,7 @@ module Parser.InternalDefinitions where
 
 import Parser.AST
 -- import Data.List (foldr)
-import Control.Applicative
+-- import Control.Applicative (<$>)
 
 {- TODO
  - Transform internal definitions to letrec definitions.
@@ -17,7 +17,7 @@ removeIntDef = map transIntDef
 
         changeDef xs = 
             [List $ [Symbol "letrec", 
-                     List $ List <$> map (\y -> [fst y, snd y ]) defines] ++ rest]
+                     List $ map (\y -> List [fst y, snd y ]) defines] ++ rest]
             where isDefine (List (Symbol "define":xs)) = True
                   isDefine _ = False
                                

@@ -7,5 +7,5 @@ import Parser.TransformTopDefinitions
 import Parser.ApplyMacros
 
 mainTest input = case readExpr input of
-                  Right ast -> show $ (removeIntDef . applyMacros . transformTopDef) ast
-                  Left err  -> show err
+                   Right ast -> show $ (applyMacros . removeIntDef . transformTopDef) ast
+                   Left err  -> show err
