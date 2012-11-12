@@ -7,6 +7,8 @@ import Parser.InternalDefinitions
 tests = [  ("(define x (lambda (y) (define a b) a))",
            "[(define x (lambda (y) (letrec ((a b)) a)))]")
          ,("1", "[1]")
+         ,("(let ((x y)) (define a b) a)",
+           "[(let ((x y)) (letrec ((a b)) a))]")
         ]
 
 testReadExpr :: (String, String) -> String
