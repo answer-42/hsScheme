@@ -25,4 +25,4 @@ checkDefines = go check True
 
         -- | Checks if the defines only occur at the beginning of the body.
         correctOrder :: [LispVal] -> Bool
-        correctOrder = all (not . isDefine) . takeWhile isDefine
+        correctOrder = all (not . isDefine) . dropWhile isDefine
