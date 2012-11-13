@@ -12,15 +12,13 @@ import Parser.AST
 transformTopDef :: [LispVal] -> [LispVal]
 transformTopDef = map transform
   where transDefLam x xs =
-            List [Symbol "define", 
-                  head x, List $ [Symbol "lambda", List $ tail x] ++ map transform xs]   
+            List [sDef, head x, List $ [sLam, List $ tail x] ++ map transform xs]   
         transDotDefLam xi xe xs =
-            List [Symbol "define", 
-                  head xi, List $ [Symbol "lambda", xe] ++ map transform xs]
+            List [sDef, head xi, List $ [sLam, xe] ++ map transform xs]
         transform l@(List x) =
           case x of
             Symbol "define":List y:ys -> transDefLam y ys 
             Symbol "define":DottedList yi ye:ys -> transDotDefLam yi ye ys
-            Symbol "let":x:xs -> List $ Symbol "let":[x] ++ transformTopDef xs
+            Symbol "let":x:xs -> List $ sLet:[x] ++ transformTopDef xs
             _ -> l
         transform r = r

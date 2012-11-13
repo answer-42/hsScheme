@@ -56,4 +56,5 @@ isIf _ = False
 sIf = Symbol "if"
 sDef = Symbol "define"
 sLam = Symbol "lambda"
-sLet = Symbol "let" 
+sLet = Symbol "let"
+sLetr = Symbol "letrec" 
