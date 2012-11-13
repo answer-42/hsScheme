@@ -17,7 +17,7 @@ removeIntDef = map transIntDef
                           List $ map (\y -> List [fst y, snd y]) defines] ++ rest]
             where defines = map (\y -> case y of
                                          List [sDef,a,as] -> (a,removeDef [] as))
-                            $ filter isDefine xs
+                                             $ filter isDefine xs
                   rest = filter (not . isDefine) xs
 
         transIntDef :: LispVal -> LispVal
