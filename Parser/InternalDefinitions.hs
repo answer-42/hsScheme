@@ -1,15 +1,15 @@
 module Parser.InternalDefinitions where
 
 import Parser.AST
-import Control.Applicative ((<$>))
 
-removeIntDef :: [LispVal] -> [LispVal]
+removeIntDef :: AST -> AST
 removeIntDef = map transIntDef 
-  where removeDef :: [LispVal] -> LispVal -> LispVal
+  where removeDef :: AST -> LispVal -> LispVal
         removeDef d (List (Symbol "lambda":x:xs)) =
-            List $ d ++ [Symbol "lambda", x] ++ changeDef xs
+            List $ d ++ [List $ [Symbol "lambda", x] ++ changeDef xs]
         removeDef d (List xs) = List $ d ++ changeDef xs
 
+        changeDef :: AST -> AST
         changeDef xs = 
             [List $ [Symbol "letrec", 
                      List $ map (\y -> List [fst y, snd y]) defines] ++ rest]

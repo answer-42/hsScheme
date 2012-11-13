@@ -18,6 +18,8 @@ data LispVal =
   | Nil
     deriving (Eq)
 
+type AST = [LispVal]
+
 instance Show LispVal where
   show (Symbol s) = s
   show (List l) = "(" ++ sepBySpaces l ++ ")"
@@ -43,5 +45,15 @@ isSymbol (Symbol _) = True
 isSymbol _ = False
 
 isDefine :: LispVal -> Bool
-isDefine (List (Symbol "define":xs)) = True
+isDefine (List (Symbol "define":_)) = True
 isDefine _ = False
+
+isIf :: LispVal -> Bool
+isIf (List (Symbol "if":_)) = True
+isIf _ = False
+
+-- Symbol shortcuts
+sIf = Symbol "if"
+sDef = Symbol "define"
+sLam = Symbol "lambda"
+sLet = Symbol "let" 

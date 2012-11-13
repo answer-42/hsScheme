@@ -5,7 +5,13 @@ import Parser.Parser
 import Parser.InternalDefinitions
 import Parser.TransformTopDefinitions
 import Parser.ApplyMacros
+import Parser.IfToCond
 
 mainTest input = case readExpr input of
-                   Right ast -> show $ (applyMacros . removeIntDef . transformTopDef) ast
+                   Right ast -> show $ 
+                                (--ifTrans . 
+                                 --applyMacros . 
+                                 removeIntDef .
+                                 transformTopDef
+                                ) ast
                    Left err  -> show err
