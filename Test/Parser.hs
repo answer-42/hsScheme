@@ -8,7 +8,7 @@ import Parser.Parser
 tests = ["#\\a",
          "\"hello \n\\\"scheme\\\"\"",
          "123",
-         "1.42",
+--         "1.42",
          "symbol42",
          "(a b c)",
          "(h (54 2) . e)",
@@ -16,9 +16,8 @@ tests = ["#\\a",
          "'('u 3)",
          "#t",
          "#f",
-         "(define a (lambda (b c) \"hello\"))\n(1 a 5)",
-         "( . a)"]
-
+         "(define a (lambda (b c) \"hello\"))\n(1 a 5)"]
+                
 testReadExpr :: String -> [String]
 testReadExpr s = case readExpr s of
   Left e -> ["error: " ++ show e]
