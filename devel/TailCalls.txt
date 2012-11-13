@@ -1,0 +1,44 @@
+Stappen die we moeten nemen voor een transformatie van TC naar while
+loop. Dan kunnen we de volgende stappen nemen:
+
+Def: /Tail Call(TC)/ Een TC is een aanroep naar de eerste omsluitende
+     procedure <a>, of een expressie die geen aanroep naar <a>
+     bevat. Verder moet het het laatste zijn wat de procedure uitvoert.
+Def: /taggen/ Een expressie kan ofwel TC zijn, of niet TC. 
+
+* Cond: z.v.v.a. kunenn we aannemen dat de volgorde van het taggen van
+  de cond clauses niet uitmaakt. 
+  
+  ** Dus dan taggen we alle cond clauses. 
+  ** En krijgen iets van de vorm:
+     	(cond (<a1> <c1>) \
+	      .           | Basisgevallen
+	      .		  |
+	      (<an> <cn>) /
+	      (<b1> <TC1>) \
+	      .		   | Tail calls
+	      .		   |
+	      (<bm> <TCm>) /
+   
+   ** Nu kunnen we het transformeren naar:
+         while ( not (<a1> and ... and <an>)) {
+	       if <b1> then <TC1>
+	       .
+	       .
+	       else if <bm> then <TCm>
+	  }
+	  return if <a1> then <c1>
+	  	 else if <an> then <cn>
+		 
+* And/Or: Translatie naar "if".
+
+*[X] If: Translatie naar "cond".
+
+* let*: Translatie naar let.
+
+* let: Translatie naar lambda .
+
+* named-let: Translatie naar letrec/lambda.
+
+* lambda: We kijken naar de laatste expressie en dan checken we of het
+  een TC is. (...)
