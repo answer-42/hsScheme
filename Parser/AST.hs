@@ -15,6 +15,7 @@ data LispVal =
   | String String
   | Bool Bool
   | Char Char
+  | Nil
     deriving (Eq)
 
 instance Show LispVal where
@@ -26,7 +27,7 @@ instance Show LispVal where
   show (String s) = "\"" ++ s ++ "\""
   show (Bool p) = if p then "#t" else "#f"
   show (Char c) = "#\\" ++ [c]
-
+ 
 sepBySpaces :: [LispVal] -> String
 sepBySpaces = intercalate " " . (show <$>)
 

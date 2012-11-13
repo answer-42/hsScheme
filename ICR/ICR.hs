@@ -7,7 +7,7 @@ type Name = String
 
 data Type
    = Int
-   | Float
+--   | Float
    | Char
 --   | Array Type
    | Pointer Type
