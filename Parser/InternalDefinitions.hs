@@ -11,8 +11,10 @@ removeIntDef = map transIntDef
 
         changeDef :: AST -> AST
         changeDef xs = 
-            [List $ [sLetr,
-                     List $ map (\y -> List [fst y, snd y]) defines] ++ rest]
+            [List $ if null defines 
+                    then rest
+                    else [sLetr,
+                          List $ map (\y -> List [fst y, snd y]) defines] ++ rest]
             where defines = map (\y -> case y of
                                          List [sDef,a,as] -> (a,removeDef [] as))
                             $ filter isDefine xs
