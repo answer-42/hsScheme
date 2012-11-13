@@ -1,6 +1,5 @@
 -- file: ICR.hs
 
-{-# LANGUAGE ExistentialQuantification #-}
 module ICR.ICR where
 
 type Var = String
@@ -10,13 +9,14 @@ data Type
    = Int
    | Float
    | Char
-   | Array Type
+--   | Array Type
    | Pointer Type
 
 data TopLevelDecl
    = FunDef Function
    | Typedef Var Var
-     
+   | Decl Decl 
+
 data Decl
    = VarDef Var (Maybe Expr)
 
@@ -30,13 +30,16 @@ data Expr
    | Arith ArithExpr
 
 data ArithExpr
-   = Undefined
+   = Add Expr Expr
+   | Sub Expr Expr
+   | Mult Expr Expr
+   | Div Expr Expr
 
 data Function
    = Function {
-     name :: String,
-     returnType :: Type,
-     arguments :: [(Name, Type)],
-     body :: [Statement]
+       name :: String,
+       returnType :: Type,
+       arguments :: [(Name, Type)],
+       body :: [Statement]
      }
      

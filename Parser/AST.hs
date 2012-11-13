@@ -11,7 +11,7 @@ data LispVal =
   | DottedList [LispVal] LispVal
 --  | Vector
   | Number Integer
-  | Float Double
+--  | Float Double
   | String String
   | Bool Bool
   | Char Char
@@ -22,7 +22,7 @@ instance Show LispVal where
   show (List l) = "(" ++ sepBySpaces l ++ ")"
   show (DottedList l v) = "(" ++ sepBySpaces l ++ " . " ++ show v ++ ")"
   show (Number n) = show n
-  show (Float r) = show r
+--  show (Float r) = show r
   show (String s) = "\"" ++ s ++ "\""
   show (Bool p) = if p then "#t" else "#f"
   show (Char c) = "#\\" ++ [c]

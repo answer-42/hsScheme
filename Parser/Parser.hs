@@ -53,13 +53,13 @@ integer = do
   x <- digits
   return $ Number $ s (read x)
 
-float :: Parser LispVal
-float = do
-  s <- sign
-  beforePoint <- digits
-  P.char '.'
-  afterPoint <- digits
-  return $ Float $ s (read (beforePoint ++ "." ++ afterPoint))
+-- float :: Parser LispVal
+-- float = do
+--   s <- sign
+--   beforePoint <- digits
+--   P.char '.'
+--   afterPoint <- digits
+--   return $ Float $ s (read (beforePoint ++ "." ++ afterPoint))
 
 dottedList :: Parser LispVal
 dottedList = do
@@ -78,7 +78,7 @@ expr = try string
    <|> try symbol
    <|> try bool
    <|> try char
-   <|> try float
+   -- <|> try float
    <|> try integer
    <|> try quote
    <|> between lparen rparen (try dottedList <|> list)
