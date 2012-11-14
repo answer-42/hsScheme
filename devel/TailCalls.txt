@@ -36,9 +36,9 @@ Def: /taggen/ Een expressie kan ofwel TC zijn, of niet TC.
 
 *[X] let*: Translatie naar let.
 
-*[Sebastian] let: Translatie naar lambda.
+*[X] let: Translatie naar lambda.
 
-* named-let: Translatie naar letrec/lambda.
+*[Sebastian] named-let: Translatie naar letrec/lambda.
 
 * lambda: We kijken naar de laatste expressie en dan checken we of het
   een TC is. (...)
