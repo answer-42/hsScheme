@@ -4,7 +4,10 @@ import Data.List (intercalate)
 
 import Parser.AST
 import Parser.Parser
-  
+
+import Test.AndOrToIf
+import Parser.AndOrToIf
+
 tests = ["#\\a",
          "\"hello \n\\\"scheme\\\"\"",
          "123",
@@ -21,6 +24,6 @@ tests = ["#\\a",
 testReadExpr :: String -> [String]
 testReadExpr s = case readExpr s of
   Left e -> ["error: " ++ show e]
-  Right a -> map show a
+  Right a -> map show (andOrTrans a)
 
-test = mapM_ (putStrLn . intercalate " " . testReadExpr) tests
+test = mapM_ (putStrLn . intercalate " " . testReadExpr) (tests ++ andOrTests)
