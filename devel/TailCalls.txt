@@ -30,7 +30,7 @@ Def: /taggen/ Een expressie kan ofwel TC zijn, of niet TC.
 	  return if <a1> then <c1>
 	  	 else if <an> then <cn>
 		 
-*[Willem] And/Or: Translatie naar "if".
+*[X] And/Or: Translatie naar "if". (willem)
 
 *[X] If: Translatie naar "cond".
 
