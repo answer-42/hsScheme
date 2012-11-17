@@ -1,4 +1,5 @@
 -- file: AST.hs
+-- P.S. AST stands for abstract syntax tree ;-)
 
 module Parser.AST where
 
