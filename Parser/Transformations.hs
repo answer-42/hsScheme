@@ -52,8 +52,8 @@ letToLambda = map changeLet
             let xs' = case xs of 
                           List y -> y
                           y -> [y]
-            in List $ [List $ [sLam,List $ map getSym x] ++
-                       letToLambda xs'] ++ map getArg x
+            in List $ (List $ [sLam,List $ map getSym x] ++
+                       letToLambda xs'):map getArg x
           changeLet (List x) = List $ letToLambda x
           changeLet r = r
 
@@ -77,7 +77,7 @@ transformTopDef = map transform
           case x of
             Symbol "define":List y:ys -> transDefLam y ys 
             Symbol "define":DottedList yi ye:ys -> transDotDefLam yi ye ys
-            Symbol "let":x:xs -> List $ sLet:[x] ++ transformTopDef xs
+            Symbol "let":x:xs -> List $ sLet:x:transformTopDef xs
             _ -> l
         transform r = r
 
