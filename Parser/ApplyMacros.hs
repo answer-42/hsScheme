@@ -12,9 +12,8 @@ data Macro = Macro { keyword :: LispVal
 
 {- Standard macros from the R5RS. 
  -}
-macros = [
-  
-]
+-- macros = [
+-- ]
 
 {- TODO:
  - We have to implement a macro reader that finds all syntax rules and adds them
