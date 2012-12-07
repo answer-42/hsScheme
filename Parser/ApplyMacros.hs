@@ -4,16 +4,18 @@ import Parser.AST
 
 {- Datatype where we can match the keyword in our AST tree and then transform it
  - following the transformer rules. Each transformer rule has its own pattern
- - to match against. 
+ - to match against.
+ -
+ - Remark: Every pattern of ONE rule gets his own Macro!!!
  -}
-data Macro = Macro { keyword :: LispVal
-                    ,transformers :: [LispVal] 
+data Macro = Macro { pattern :: [LispVal]     -- the whole pattern, including literals
+                    ,literals :: [LispVal]    -- List of Symbols
+                    ,transformer :: [LispVal] -- What we get at the end
                    } deriving (Show)
 
 {- Standard macros from the R5RS. 
  -}
--- macros = [
--- ]
+-- macro = []
 
 {- TODO:
  - We have to implement a macro reader that finds all syntax rules and adds them
