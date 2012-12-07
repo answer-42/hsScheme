@@ -2,7 +2,11 @@ The steps we take for our incremental compiler approach.
 
 * Parsing
 * semantic checks
-* transform toplevel defines <TransformTopDefinitions.hs>
+* transform toplevel defines 
 * apply macros <ApplyMacros.hs>
-* remove internal defines <InternalDefinitions.hs>
+* remove internal defines 
 * declaration table
+
+Right now everything is in <Parser/Transformations.hs>, but it will be changed
+and if possible the transformations will become mere macros, and therfor will be
+part of <Parser/ApplyMacros.hs>.
