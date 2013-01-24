@@ -2,6 +2,8 @@
 
 module ICR.ICR where
 
+import Parser.AST
+
 type Var = String
 type Name = String
 
@@ -42,4 +44,7 @@ data Function
        arguments :: [(Name, Type)],
        body :: [Statement]
      }
+
+transformASTICR :: [LispVal] -> [TopLevelDecl]
+transformASTICR 
      
