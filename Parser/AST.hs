@@ -63,3 +63,6 @@ sCond = Symbol "cond"
 sElse = Symbol "else"
 sT = Symbol "#t"
 sF = Symbol "#f"
+
+sDefSyn = Symbol "define-syntax"
+sSynRul = Sybmol "syntax-rules"

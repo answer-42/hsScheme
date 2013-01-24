@@ -13,9 +13,10 @@ data Macro = Macro { pattern :: [LispVal]     -- the whole pattern, including li
                     ,transformer :: [LispVal] -- What we get at the end
                    } deriving (Eq, Show)
 
-{- Standard macros from the R5RS. 
+{- Standard macros from the R5RS (Those that are right now in Parser.Transformation. 
+   will be read from a seperate file. 
  -}
--- macro = []
+
 
 {- TODO:
  - We have to implement a macro reader that finds all syntax rules and adds them
@@ -24,7 +25,7 @@ data Macro = Macro { pattern :: [LispVal]     -- the whole pattern, including li
  -}
 
 -- readMacros :: AST -> Macro 
-readMacros = id 
+readMacros  = id  
 
 removeMacros :: AST -> AST
 removeMacros = id
