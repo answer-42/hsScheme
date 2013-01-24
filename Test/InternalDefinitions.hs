@@ -19,4 +19,4 @@ testReadExpr s = case readExpr $ fst s of
                                 else (show . removeIntDef) exp
                    Left e -> show e 
 
-test = map testReadExpr tests
+test = mapM_  (putStrLn . testReadExpr) tests

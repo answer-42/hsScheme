@@ -24,4 +24,4 @@ testMacros s = case readExpr $ fst s of
                               else (show . runMacros) exp
                  Left e -> show e 
 
-test = map  testMacros tests
+test = mapM_ (putStrLn . testMacros) tests
