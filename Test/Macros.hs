@@ -3,12 +3,12 @@ module Test.Macros where
 import Parser.ApplyMacros
 import Parser.Parser
 
-tests = [("(change x) (define-syntax change (syntax-rules () ((change x) (set! x 10)) ((change x y) (set! x y))))"
-         ,"(set! x 10)")
+tests = [("(change x)  (change a b) (define-syntax change (syntax-rules () ((change x) (set! x 10)) ((change x y) (set! x y))))"
+         ,"[(set! x 10),(set! a b)]")
         ,("(change y z) (define-syntax change (syntax-rules () ((change x) (set! x 10)) ((change x y) (set! x y))))"
-         ,"(set! y z)")
+         ,"[(set! y z)]")
         ,("(change x) (define-syntax change (syntax-rules () ((change y) (set! y 10)) ((change x y) (set! x y))))"
-         ,"(set! x 10)") 
+         ,"[(set! x 10)]") 
         -- ,(""
         --  ,[])
         ]
@@ -22,4 +22,4 @@ testMacros s = case readExpr $ fst s of
                               else (show . runMacros) exp
                  Left e -> show e 
 
-test = map testMacros tests
+test = mapM_ (putStrLn . testMacros) tests
