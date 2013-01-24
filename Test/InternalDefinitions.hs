@@ -1,4 +1,4 @@
-module Test.InteralDefinitions where
+module Test.InternalDefinitions where
 
 import Parser.AST
 import Parser.Parser
