@@ -17,19 +17,19 @@ data LispVal =
   | Bool Bool
   | Char Char
   | Nil
-    deriving (Eq)
+    deriving (Eq, Show)
 
 type AST = [LispVal]
 
-instance Show LispVal where
-  show (Symbol s) = s
-  show (List l) = "(" ++ sepBySpaces l ++ ")"
-  show (DottedList l v) = "(" ++ sepBySpaces l ++ " . " ++ show v ++ ")"
-  show (Number n) = show n
---  show (Float r) = show r
-  show (String s) = "\"" ++ s ++ "\""
-  show (Bool p) = if p then "#t" else "#f"
-  show (Char c) = "#\\" ++ [c]
+-- instance Show LispVal where
+--   show (Symbol s) = s
+--   show (List l) = "(" ++ sepBySpaces l ++ ")"
+--   show (DottedList l v) = "(" ++ sepBySpaces l ++ " . " ++ show v ++ ")"
+--   show (Number n) = show n
+-- --  show (Float r) = show r
+--   show (String s) = "\"" ++ s ++ "\""
+--   show (Bool p) = if p then "#t" else "#f"
+--   show (Char c) = "#\\" ++ [c]
  
 sepBySpaces :: [LispVal] -> String
 sepBySpaces = intercalate " " . (show <$>)
@@ -65,4 +65,4 @@ sT = Symbol "#t"
 sF = Symbol "#f"
 
 sDefSyn = Symbol "define-syntax"
-sSynRul = Sybmol "syntax-rules"
+sSynRul = Symbol "syntax-rules"

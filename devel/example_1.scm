@@ -30,3 +30,9 @@
 (map fib '(1 2 3 4 5))
 (map fib (list 1 2 3 4 5))
 
+(define-syntax change 
+  (syntax-rules () 
+    ((change x) 
+     (set! x 10))
+    ((change x y)
+     (set! x y))))
