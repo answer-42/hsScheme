@@ -31,10 +31,7 @@ data Macro = Macro {name :: String
 readMacros :: AST -> [Macro] 
 readMacros = concatMap readMacro . filter isMacro
 --    filter isMacro
-    where isMacro (List (Symbol "define-syntax":_)) = True
-          isMacro _ = False
-
-          readMacro :: LispVal -> [Macro]
+    where readMacro :: LispVal -> [Macro]
           readMacro (List [Symbol "define-syntax",Symbol x,List xs]) = createMacro x xs
           readMacro _ = []
           
@@ -44,11 +41,7 @@ readMacros = concatMap readMacro . filter isMacro
           createMacro _ _ = []
 
 removeMacros :: AST -> AST
-removeMacros = id
+removeMacros = filter (not . isMacro)
 
 applyMacros :: AST -> AST
-applyMacros = id 
-
-{- TODO
- - Apply macros to AST
- -}
+applyMacros = 

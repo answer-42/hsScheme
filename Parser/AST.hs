@@ -53,6 +53,11 @@ isIf :: LispVal -> Bool
 isIf (List (Symbol "if":_)) = True
 isIf _ = False
 
+isMacro :: LispVal -> Bool
+isMacro (List (Symbol "define-syntax":_)) = True
+isMacro _ = False
+
+
 -- Symbol shortcuts
 sIf = Symbol "if"
 sDef = Symbol "define"
