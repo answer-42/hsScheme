@@ -52,7 +52,7 @@ applyMacros macros =
         getMacro n a = L.find ((a ==) . arity) $ fromJust $ M.lookup n macroM
 
         transform x m = 
-            let varSub = zip (tail $ pattern m) x
+            let varSub = zip (tail $ pattern m) $ applyMacros macros x
             in
               -- fromJust does never throw an error. 
               List $ map (\y -> fromMaybe y $ y `lookup` varSub) $ transformer m
@@ -63,5 +63,7 @@ applyMacros macros =
                    Just m  -> transform xs m
                    Nothing -> error $ "Arity mismatch in -- " ++ map toUpper s
             else x
+        applyMacro x = x
+ 
     in map applyMacro
 

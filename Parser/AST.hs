@@ -32,7 +32,7 @@ instance Show LispVal where
   show (Char c) = "#\\" ++ [c]
  
 sepBySpaces :: [LispVal] -> String
-sepBySpaces = unwords (show <$>)
+sepBySpaces = unwords . (show <$>)
 
 createLambda :: [String] -> [LispVal] -> LispVal
 createLambda args body = List ([Symbol "lambda", List (Symbol <$> args)] ++ body)
