@@ -87,6 +87,7 @@ removeIntDef = map transIntDef
         removeDef d (List (Symbol "lambda":x:xs)) =
             List $ d ++ [List $ [sLam, x] ++ changeDef xs]
         removeDef d (List xs) = List $ d ++ changeDef xs
+        removeDef d l = l 
 
         changeDef :: AST -> AST
         changeDef xs = 

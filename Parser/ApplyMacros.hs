@@ -11,7 +11,7 @@ import Parser.AST
 data Macro = Macro { pattern :: [LispVal]     -- the whole pattern, including literals
                     ,literals :: [LispVal]    -- List of Symbols
                     ,transformer :: [LispVal] -- What we get at the end
-                   } deriving (Show)
+                   } deriving (Eq, Show)
 
 {- Standard macros from the R5RS. 
  -}
@@ -23,6 +23,13 @@ data Macro = Macro { pattern :: [LispVal]     -- the whole pattern, including li
  - the syntax rules!
  -}
 
+-- readMacros :: AST -> Macro 
+readMacros = id 
+
+removeMacros :: AST -> AST
+removeMacros = id
+
+applyMacros :: AST -> AST
 applyMacros = id 
 
 {- TODO

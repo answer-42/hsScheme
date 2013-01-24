@@ -2,7 +2,8 @@ module Test.InteralDefinitions where
 
 import Parser.AST
 import Parser.Parser
-import Parser.InternalDefinitions
+-- import Parser.InternalDefinitions
+import Parser.Transformations
 
 tests = [  ("(define x (lambda (y) (define a b) (+ 11 2) a))",
            "[(define x (lambda (y) (letrec ((a b)) (+ 11 2) a)))]")
