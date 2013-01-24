@@ -3,7 +3,7 @@ module Test.Macros where
 import Parser.ApplyMacros
 import Parser.Parser
 
-tests = [("(change x) (define-syntax () ((change x) (set! x 10)))"
+tests = [("(change x) (define-syntax change (syntax-rules () ((change x) (set! x 10))))"
          ,"(set! x 10)")
         -- ,(""
         --  ,[])
