@@ -55,7 +55,7 @@ applyMacros macros =
             let varSub = zip (tail $ pattern m) x
             in
               -- fromJust does never throw an error. 
-              List $ map (\y -> maybe y id $ y `lookup` varSub) $ transformer m
+              List $ map (\y -> fromMaybe y $ y `lookup` varSub) $ transformer m
                   
         applyMacro x@(List (Symbol s:xs)) = 
             if s `M.member` macroM 

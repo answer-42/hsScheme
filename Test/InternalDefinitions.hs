@@ -14,7 +14,7 @@ tests = [  ("(define x (lambda (y) (define a b) (+ 11 2) a))",
 
 testReadExpr :: (String, String) -> String
 testReadExpr s = case readExpr $ fst s of
-                   Right exp -> if ((show . removeIntDef) exp == snd s) 
+                   Right exp -> if (show . removeIntDef) exp == snd s
                                 then show "Success" 
                                 else (show . removeIntDef) exp
                    Left e -> show e 

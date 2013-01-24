@@ -87,4 +87,4 @@ multiExpr :: Parser [LispVal]
 multiExpr = expr `endBy1` spaces <* eof
 
 readExpr :: String -> Either ParseError [LispVal]
-readExpr input = parse multiExpr "scheme" input
+readExpr = parse multiExpr "scheme"

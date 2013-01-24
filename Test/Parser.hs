@@ -1,7 +1,5 @@
 module Test.Parser where
 
-import Data.List (intercalate)
-
 import Parser.AST
 import Parser.Parser
 
@@ -26,4 +24,4 @@ testReadExpr s = case readExpr s of
   Left e -> ["error: " ++ show e]
   Right a -> map show (andOrTrans a)
 
-test = mapM_ (putStrLn . intercalate " " . testReadExpr) (tests ++ andOrTests)
+test = mapM_ (putStrLn . unwords . testReadExpr) (tests ++ andOrTests)
