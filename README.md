@@ -6,4 +6,6 @@ On the commanline, first move to the directory where the Main.hs file is. Then
 $ ghc Main.hs
 $ ./Main <flags>
 
-Currently the -t flag is supported.
+## Supported flags
+* _-t_: Run the tests.
+* _-c_: Compile the string given in the second argument.

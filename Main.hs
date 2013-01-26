@@ -15,6 +15,7 @@ main = do
   unless (null args)
          (case head args of
                "-t"      -> void doTests
+               "-c"      -> putStrLn $ compile $ args !! 1
                -- Insert new commands here
                otherwise -> void doUsage)
   where doTests = test
