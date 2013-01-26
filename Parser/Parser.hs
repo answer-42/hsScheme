@@ -34,7 +34,7 @@ string = String <$> between2 doubleQuote (many (escaped <|> noneOf "\"\\"))
                         ('r', '\r'), ('t', '\t')]
 
 symbol :: Parser LispVal
-symbol = Symbol <$> (((:) <$> letter
+symbol = Symbol <$> (((:) <$> (letter <|> specialChar)
                           <*> many (letter <|> specialChar <|> digit)) 
                      <|> (pure <$> oneOf "+-") <|> P.string "...")
   where specialChar = oneOf "!$%&*+-./:<=>?@^_~"

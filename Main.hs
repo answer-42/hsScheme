@@ -24,9 +24,9 @@ main = do
 compile input = case readExpr input of
                      Right ast -> let x      = (removeIntDef . transformTopDef) ast
                                       macros = readMacros x
-                                      x'     = removeMacros x
                                   in show $ (letToLambda . 
                                       letStarTrans . 
                                       ifTrans . 
-                                      applyMacros macros) x'
+                                      applyMacros macros) 
+                                      $ removeMacros x
                      Left err  -> show err
