@@ -1,0 +1,11 @@
+Name:             hsScheme
+Version:          0.0
+Description:      A small Scheme implementation.
+License:          OtherLicense
+Author:           Sebastian Benque, Willem Obbens
+Build-Type:       Simple
+Cabal-Version:    >= 1.2
+
+Executable hsScheme
+  Main-is:        Main.hs
+  Build-Depends:  base, parsec, containers
