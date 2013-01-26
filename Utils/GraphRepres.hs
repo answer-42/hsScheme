@@ -19,7 +19,7 @@ graph = mkGraph [(0, "TOP")] [] :: Gr String Int
 
 -- astToGraph :: AST -> Gr String Int 
 astToGraph = foldl (\g e -> let ns = labNodes g
-                                    pre = foldr (\(e,_) a -> if e>a then e else a) 0 ns
+                                pre = foldr (\(e,_) a -> if e>a then e else a) 0 ns
                             in addNode g pre e 0)
                        graph 
   where addNode g pre (List x) base = addListNode g pre base x
