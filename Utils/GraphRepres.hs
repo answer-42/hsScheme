@@ -24,6 +24,10 @@ graph = mkGraph [(0, "TOP")] [] :: AGraph
 getLastNode :: AGraph -> Node
 getLastNode g = foldr (\(e, _) a -> if e > a then e else a) 0 $ labNodes g
 
+getLastTop g = foldr (\(e, n) a -> if e > a && n == "LIST" && notClosed e
+                                   then e else a) 0 $ labNodes g
+  where notClosed e = True -- Her we have to check if there is a NIL for the LIST (if not True)
+
 -- Insert a Node with an edge to the source node (singular)
 insNodeEdge :: Node -> Node -> a -> b -> Gr a b -> Gr a b
 insNodeEdge s t n w g = insEdge (s, t, w) $ insNode (t, n) g 
@@ -34,6 +38,7 @@ astToGraph = foldl (addNode 0) graph
                                in addListNode (insNodeEdge s l "LIST" () g) l l x
         -- TODO add support for dotted list
         addNode s g x        = let l = 1 + getLastNode g
+                                   s = getLastTop g
                                in insNodeEdge s l (show x) () g 
 
         addListNode g l s []     = addNode s g (String "NIL" :: LispVal)
