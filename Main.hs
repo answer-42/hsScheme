@@ -8,6 +8,8 @@ import Parser.Parser
 import Parser.Transformations
 import Parser.ApplyMacros
 
+import Utils.GraphRepres
+
 import Test.TestMain
 
 main = do
@@ -16,6 +18,7 @@ main = do
          (case head args of
                "-t"      -> void doTests
                "-c"      -> putStrLn $ compile $ args !! 1
+               "-g"      -> putStrLn $ mkASTGraph $ args !! 1 
                -- Insert new commands here
                otherwise -> void doUsage)
   where doTests = test
