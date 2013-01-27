@@ -15,29 +15,31 @@ import Parser.Parser
 - * Add in astToGraph proper support for List, so that a List gets a top Node.
   -}
 
-graph = mkGraph [(0, "TOP")] [] :: Gr String ()
+type AGraph = Gr String ()
+
+graph = mkGraph [(0, "TOP")] [] :: AGraph
 
 -- Get the node with the highest node number, where Node Numbers are positive
 -- integers.
-getLastNode :: [(Node, a)] -> Node
-getLastNode = foldr (\(e, _) a -> if e > a then e else a) 0
+getLastNode :: AGraph -> Node
+getLastNode g = foldr (\(e, _) a -> if e > a then e else a) 0 $ labNodes g
 
 -- Insert a Node with an edge to the source node (singular)
 insNodeEdge :: Node -> Node -> a -> b -> Gr a b -> Gr a b
 insNodeEdge s t n w g = insEdge (s, t, w) $ insNode (t, n) g 
 
-astToGraph :: AST -> Gr String () 
-astToGraph = foldl (\g e -> let l = getLastNode $ labNodes g
-                            in addNode g l e 0)
-                       graph 
-  where addNode g l (List x) s = addListNode g l s x
+astToGraph :: AST -> AGraph
+astToGraph = foldl (addNode 0) graph
+  where addNode s g (List x) = let l = 1 + getLastNode g 
+                               in addListNode (insNodeEdge s l "LIST" () g) l l x
         -- TODO add support for dotted list
-        addNode g l x s        = insNodeEdge s (l+1) (show x) () g 
+        addNode s g x        = let l = 1 + getLastNode g
+                               in insNodeEdge s l (show x) () g 
 
-        addListNode g l s [] = addNode g l (String "NIL" :: LispVal) s
+        addListNode g l s []     = addNode s g (String "NIL" :: LispVal)
         addListNode g l s (x:xs) =
-          let g'  = addNode g l x s
-              l'  = getLastNode $ labNodes g'
+          let g'  = addNode s g x
+              l'  = getLastNode g'
           in addListNode g' l' l' xs
 
 mkASTGraph :: String -> String
