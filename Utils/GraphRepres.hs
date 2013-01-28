@@ -10,8 +10,7 @@ import Parser.Parser
 import Data.List
 
 indent :: Int -> String
-indent l = l `listMul` "\t"
-  where listMul l x = concat $ replicate l x
+indent l = replicate l '\t'
 
 astToGraph :: AST -> [String]
 astToGraph = map (addToGraph 0)
