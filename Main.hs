@@ -10,22 +10,22 @@ import Parser.ApplyMacros
 
 import Utils.GraphRepres
 
-import Test.TestMain
+import Test.Main
 
 main = do
   args <- getArgs
   unless (null args)
          (case head args of
-               "-t"      -> void doTests
-               "-c"      -> putStrLn $ compile $ args !! 1
-               "-g"      -> putStrLn $ mkASTGraph $ args !! 1 
+               "-t"      -> doTests
+               "-c"      -> unless (null (tail args)) $ putStrLn $ compile $ args !! 1
+               "-g"      -> unless (null (tail args)) $ putStrLn $ mkASTGraph $ args !! 1 
                -- Insert new commands here
-               otherwise -> void doUsage)
+               otherwise -> doUsage)
   where doTests = test
         doUsage = putStrLn "TODO: Usage text"
 
 compile input = case readExpr input of
-                     Right ast -> let x      = (removeIntDef . transformTopDef) ast
+                     Right ast -> let x      = removeIntDef $ transformTopDef ast
                                       macros = readMacros x
                                   in show $ (letToLambda . 
                                       letStarTrans . 
