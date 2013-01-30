@@ -1,4 +1,4 @@
-module Test.Macros where
+module Test.Parser.Macros where
 
 import Parser.ApplyMacros
 import Parser.Parser

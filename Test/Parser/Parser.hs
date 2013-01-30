@@ -1,10 +1,10 @@
-module Test.Parser where
+module Test.Parser.Parser where
 
 import Parser.AST
 import Parser.Parser
 
-import Test.AndOrToIf
-import Parser.AndOrToIf
+-- import Test.AndOrToIf
+-- import Parser.AndOrToIf
 
 tests = ["#\\a",
          "\"hello \n\\\"scheme\\\"\"",
@@ -22,6 +22,6 @@ tests = ["#\\a",
 testReadExpr :: String -> [String]
 testReadExpr s = case readExpr s of
   Left e -> ["error: " ++ show e]
-  Right a -> map show (andOrTrans a)
+  Right a -> map show a
 
-test = mapM_ (putStrLn . unwords . testReadExpr) (tests ++ andOrTests)
+test = mapM_ (putStrLn . unwords . testReadExpr) tests

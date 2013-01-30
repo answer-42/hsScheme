@@ -1,4 +1,4 @@
-module Test.TestMain where
+module Test.Parser.TestMain where
 
 import qualified Test.InternalDefinitions as ID
 import qualified Test.Macros as M
