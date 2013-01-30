@@ -8,11 +8,12 @@ interMap s f = L.intercalate s . map f
 type Name = String
 type Var = (Name, Type)
 type Args = [(Name, Type)]
+type Cells = Int
 
 data Type = IInt
      --   | IFloat
           | IChar
-     --   | Array Type
+          | IArray Type Cells
           | IPointer Type
 
 data TopLevel = FunDef Function
@@ -30,7 +31,9 @@ data Expr = Funcall Name [Expr]
           | Assign Name Expr
           | Decl Decl  
           | Arith ArithExpr
-          | Const ConstExpr  
+          | Const ConstExpr 
+          | Conditional Expr Expr Expr  
+          | Subscript Expr Int
             
 data ConstExpr = CChar Char
                | CInt Int  
@@ -57,7 +60,10 @@ instance Show Block where
   show (Block s) = "{\n  " ++ interMap ";\n  " show s ++ ";\n}"
   
 instance Show Decl where
-  show (VarDef (n, t) e) = show t ++ " " ++ n ++ maybe "" ((" = " ++) .  show) e
+  show (VarDef (n, t) e) =
+    (case t of
+        IArray t' _ -> show t' ++ " " ++ n ++ "[]"
+        t' -> show t ++ " " ++ n) ++ maybe "" ((" = " ++) .  show) e
   
 instance Show ConstExpr where
   show (CChar c) = show c
@@ -77,6 +83,8 @@ instance Show Expr where
   show (Decl d) = show d
   show (Arith ae) = show ae
   show (Const ce) = show ce
+  show (Conditional p a b) = "(" ++ show p ++ " ? " ++ show a ++ " : " ++ show b ++ ")"
+  show (Subscript e i) = show e ++ "[" ++ show i ++ "]"
 
 instance Show Statement where
   show (Return e) = "return " ++ show e
@@ -87,8 +95,13 @@ instance Show Type where
   show IInt = "int"
   show IChar = "char"
   show (IPointer t) = show t ++ "*"
+  show (IArray t _) = show t
 
 instance Show Function where
   show (Function n rt a b) =
     show rt ++ " " ++ n ++ "(" ++ interMap ", " showArg a ++ ") " ++ show b
-    where showArg (n, t) = show t ++ " " ++ n
+    where showArg (n, t) =
+            case t of
+              IArray t' i -> show t' ++ " " ++ n ++ "[]"
+              t' -> show t' ++ " " ++ n
+  
