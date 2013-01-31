@@ -7,19 +7,20 @@ data AType =
   | AString
   | AChar
   | ABool
-  | AFunction AType
+  | AFunction [AType] AType
+  | AUndefined
 
 data AnnLispVal =
-  Symbol String AType
-  | List [AnnLispVal]
-  | DottedList [AnnLispVal] AnnLispVal
+  ASymbol String AType
+  | AList [AnnLispVal]
+  | ADottedList [AnnLispVal] AnnLispVal
 --  | Vector
-  | Number Integer
+  | ANumber Integer
 --  | Float Double
-  | String String
-  | Bool Bool
-  | Char Char
-  | Nil
+  | AString String
+  | ABool Bool
+  | AChar Char
+  | ANil
     deriving (Eq)
 
-
+type AST2 = [AnnLispVal]
