@@ -6,6 +6,7 @@ data AType =
   AInt
   | AString
   | AChar
+  | ABool
   | AFunction AType
 
 data AnnLispVal =
