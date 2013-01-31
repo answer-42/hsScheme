@@ -1,0 +1,6 @@
+module Test.Main where
+
+import qualified Test.ICR.Main as I
+import qualified Test.Parser.Main as P
+
+test = sequence_ [I.test, P.test]
