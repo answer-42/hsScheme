@@ -5,6 +5,8 @@ import Parser.AST
 
 interMap s f = L.intercalate s . map f
 
+type ICR = [TopLevel]
+
 type Name = String
 type Var = (Name, Type)
 type Args = [(Name, Type)]
@@ -23,6 +25,7 @@ data Decl = VarDef Var (Maybe Expr)
 
 data Statement = Return Expr
                | Expr Expr
+               | If Expr Block (Maybe Block)
                | SBlock Block  
 
 newtype Block = Block [Statement]
