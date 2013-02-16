@@ -57,4 +57,4 @@ appAST ast = let x = removeIntDef $ transformTopDef ast
                   ifTrans . 
                   applyMacros macros) 
                   $ removeMacros x
-              
+                
