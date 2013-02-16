@@ -43,7 +43,7 @@ astC input = case readExpr input of
                   Left err  -> show err
 
 parrotC input = case readExpr input of
-                     Right ast -> show $ astToParrot $ appAST ast
+                     Right ast -> astToParrot $ appAST ast
                      Left err  -> show err
 
 graphC input = case readExpr input of

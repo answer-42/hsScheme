@@ -4,4 +4,10 @@ import Parser.AST
 
 
 astToParrot :: AST -> String
-astToParrot = show
+astToParrot ast = ".sub main :main\n"++ (foldr f "" topLevel) ++ ".end"
+  where f (List [Symbol "display",Symbol x]) a = a++"say x\n"
+        f (List [Symbol "display",String x]) a = a++"say \""++x++"\"\n"
+        f _ _ = error "Something went wrong -- astToParrot"
+        
+        topLevel = filter (\x -> case x of
+

@@ -20,6 +20,7 @@ astToGraph = map (addToGraph 0)
         addToGraph l (Bool b)    = indent l ++ "Bool " ++ show b ++ "\n"
         -- TODO Add Dotted List
         addToGraph l (Char c)    = indent l ++ "Char " ++ show c ++ "\n"
+        addToGraph l (String s)  = indent l ++ "String \"" ++ s ++ "\"\n"
         addToGraph l _ = indent l ++ "...\n"
 
 mkASTGraph :: AST -> String
