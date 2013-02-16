@@ -10,4 +10,5 @@ astToParrot ast = ".sub main :main\n"++ (foldr f "" topLevel) ++ ".end"
         f _ _ = error "Something went wrong -- astToParrot"
         
         topLevel = filter (\x -> case x of
+                                      _ -> True) ast
 
