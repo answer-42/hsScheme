@@ -8,6 +8,8 @@ import Parser.Parser
 import Parser.Transformations
 import Parser.ApplyMacros
 
+import Parrot.Parrot
+
 import Utils.GraphRepres
 
 import Test.Main
@@ -16,28 +18,43 @@ main = do
   args <- getArgs
   unless (null args) $ case head args of
     "-t" -> test
+    "-p" -> do 
+      when (null (tail args)) showUsage
+      putStrLn $ parrotC $ args !! 1
     "-c" -> do
       when (null (tail args)) showUsage
-      putStrLn $ compile $ args !! 1
+      putStrLn $ astC $ args !! 1
     "-g" -> do
       when (null (tail args)) showUsage
-      putStrLn $ mkASTGraph $ args !! 1 
+      putStrLn $ graphC $ args !! 1 
     -- Insert new commands here
     "--help" -> showUsage
     _ -> showUsage
   where showUsage = putStrLn $ unlines 
           ["", "Usage", "-----",
            "  -t:     run the test suite",
-           "  -c <s>: compile the string <s>",
+           "  -c <s>: compile the string <s> to AST",
+           "  -p <s>: compile the string <s> to Parrot",
            "  -g <s>: shows the lisp expression <s> in a tree representation",
            "  --help: shows this usage message"]
 
-compile input = case readExpr input of
-                     Right ast -> let x      = removeIntDef $ transformTopDef ast
-                                      macros = readMacros x
-                                  in show $ (letToLambda . 
-                                      letStarTrans . 
-                                      ifTrans . 
-                                      applyMacros macros) 
-                                      $ removeMacros x
+astC input = case readExpr input of
+                  Right ast -> show $ appAST ast
+                  Left err  -> show err
+
+parrotC input = case readExpr input of
+                     Right ast -> show $ astToParrot $ appAST ast
                      Left err  -> show err
+
+graphC input = case readExpr input of
+                    Right ast -> mkASTGraph $ appAST ast
+                    Left err  -> show err
+
+appAST ast = let x = removeIntDef $ transformTopDef ast
+                 macros = readMacros x
+             in  (letToLambda . 
+                  letStarTrans . 
+                  ifTrans . 
+                  applyMacros macros) 
+                  $ removeMacros x
+              

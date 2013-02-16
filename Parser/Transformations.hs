@@ -51,9 +51,9 @@ letToLambda = map changeLet
           changeLet (List [Symbol "let",List x,xs]) = 
             let xs' = case xs of 
                           List y -> y
-                          y -> [y]
-            in List $ (List $ [sLam,List $ map getSym x] ++
-                       letToLambda xs'):map getArg x
+                          y      -> [y]
+            in List $ (List $ [sLam,List $ map getSym x,
+                                          List $ letToLambda xs']):map getArg x
           changeLet (List x) = List $ letToLambda x
           changeLet r = r
 
@@ -70,9 +70,9 @@ letToLambda = map changeLet
 transformTopDef :: [LispVal] -> [LispVal]
 transformTopDef = map transform
   where transDefLam x xs =
-            List [sDef, head x, List $ [sLam, List $ tail x] ++ map transform xs]   
+            List [sDef, head x, List $ [sLam, List $ tail x] ++ transformTopDef xs]   
         transDotDefLam xi xe xs =
-            List [sDef, head xi, List $ [sLam, xe] ++ map transform xs]
+            List [sDef, head xi, List $ [sLam, xe] ++ transformTopDef xs]
         transform l@(List x) =
           case x of
             Symbol "define":List y:ys -> transDefLam y ys 
@@ -91,11 +91,11 @@ removeIntDef = map transIntDef
 
         changeDef :: AST -> AST
         changeDef xs = 
-            [List $ if null defines 
+            if null defines 
                     then rest
                     else [sLetr,
                           List $ map (\y -> List [fst y, snd y]) defines]
-                         ++ rest]
+                         ++ rest
             where defines =
                     map (\y -> case y of
                             List [sDef,a,as] -> (a,removeDef [] as))
@@ -108,3 +108,4 @@ removeIntDef = map transIntDef
         transIntDef (List [Symbol "define",x,xs]) = 
             removeDef [sDef,x] xs
         transIntDef r = r
+
