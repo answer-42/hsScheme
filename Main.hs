@@ -11,6 +11,7 @@ import Parser.ApplyMacros
 import Parrot.Parrot
 
 import Utils.GraphRepres
+import Utils.FileManagement
 
 import Test.Main
 
@@ -20,22 +21,22 @@ main = do
     "-t" -> test
     "-p" -> do 
       when (null (tail args)) showUsage
-      putStrLn $ parrotC $ args !! 1
+      outputAct parrotC $ args !! 1
     "-c" -> do
-      when (null (tail args)) showUsage
-      putStrLn $ astC $ args !! 1
+      when (null (tail args)) showUsage 
+      outputAct astC $ args !! 1
     "-g" -> do
       when (null (tail args)) showUsage
-      putStrLn $ graphC $ args !! 1 
+      outputAct graphC $ args !! 1
     -- Insert new commands here
     "--help" -> showUsage
     _ -> showUsage
   where showUsage = putStrLn $ unlines 
           ["", "Usage", "-----",
            "  -t:     run the test suite",
-           "  -c <s>: compile the string <s> to AST",
-           "  -p <s>: compile the string <s> to Parrot",
-           "  -g <s>: shows the lisp expression <s> in a tree representation",
+           "  -c <s>: compile the file <s> to AST",
+           "  -p <s>: compile the file <s> to Parrot",
+           "  -g <s>: shows the lisp expression file in a tree representation",
            "  --help: shows this usage message"]
 
 astC input = case readExpr input of
