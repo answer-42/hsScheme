@@ -9,9 +9,15 @@ import Parser.Parser
 
 import Data.List
 
-indent :: Int -> String
-indent l = replicate l '\t'
+-- | How many spaces astTograph will indent
+tab :: String
+tab = replicate 2 ' '
 
+indent :: Int -> String
+indent l = replicateString l tab
+
+-- | Create a graphical representation of the abstract syntax tree, that is
+-- easier on the eye. Indentation can be set in the tab function. 
 astToGraph :: AST -> [String]
 astToGraph = map (addToGraph 0)
   where addToGraph l (List x)    = indent l ++  "LIST\n" ++ concatMap (addToGraph (l+1)) x   
@@ -25,4 +31,11 @@ astToGraph = map (addToGraph 0)
 
 mkASTGraph :: AST -> String
 mkASTGraph ast = concat $ astToGraph ast
+
+
+-- Helpers
+
+replicateString :: Int -> String -> String
+replicateString 0 _ = ""
+replicateString n x = x++replicateString (n-1) x
 
