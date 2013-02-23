@@ -10,6 +10,9 @@ import qualified Text.ParserCombinators.Parsec as P
 
 import Parser.AST
 
+-- TODO 
+--  * Add comment
+
 digits = many1 digit
 lparen = P.char '('
 rparen = P.char ')'
@@ -48,10 +51,9 @@ bool = do
                    'f' -> False))
 
 integer :: Parser LispVal
-integer = do
-  s <- sign
-  x <- digits
-  return $ Number $ s (read x)
+integer = Number <$> (sign <*> (read <$> digits))
+
+-- comment = P.char ';' >> 
 
 -- float :: Parser LispVal
 -- float = do
